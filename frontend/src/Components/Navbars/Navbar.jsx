@@ -1,7 +1,4 @@
-import { useState, useContext } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { TbStackBack } from "react-icons/tb";
-import { AuthContext } from "../Authentication/AuthProvider";
+
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
