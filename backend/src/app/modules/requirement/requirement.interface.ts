@@ -5,6 +5,7 @@ export type Location = {
 };
 
 export type Requirement = {
+  userId: string;
   boardingPoint: Location;
   destination: Location;
   company: string;
@@ -13,5 +14,5 @@ export type Requirement = {
   tillWhen: Date;
   budgetType: string;
   preferredActivities: string[];
-  userId: string;
 };
+

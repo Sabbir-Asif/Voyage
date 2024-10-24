@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { format } from 'date-fns';
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
+import { format } from "date-fns";
+import { AuthContext } from "../Authentication/AuthProvider";
 
 const PlanATrip = () => {
   const [step, setStep] = useState(0);
   const [boardingPoint, setBoardingPoint] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [company, setCompany] = useState('');
+  const [company, setCompany] = useState("");
   const [ageConcern, setAgeConcern] = useState([]);
-  const [sinceWhen, setSinceWhen] = useState('');
-  const [tillWhen, setTillWhen] = useState('');
-  const [budgetType, setBudgetType] = useState('');
+  const [sinceWhen, setSinceWhen] = useState("");
+  const [tillWhen, setTillWhen] = useState("");
+  const [budgetType, setBudgetType] = useState("");
   const [preferredActivities, setPreferredActivities] = useState([]);
   const [citySuggestions, setCitySuggestions] = useState([]);
 
@@ -26,19 +27,21 @@ const PlanATrip = () => {
   ];
 
   const options = [
-    { label: 'Solo', value: 'solo' },
-    { label: 'Couple', value: 'couple' },
-    { label: 'Friends', value: 'friends' },
-    { label: 'Family', value: 'family' },
+    { label: "Solo", value: "solo" },
+    { label: "Couple", value: "couple" },
+    { label: "Friends", value: "friends" },
+    { label: "Family", value: "family" },
   ];
 
-  const ageConcernsOptions = ['Baby', 'Child', 'Old', 'Pets'];
-  const budgetOptions = ['Budget', 'Mid-range', 'Luxury'];
-  const activityOptions = ['Hiking', 'Beach', 'Museum', 'Shopping', 'Dining'];
-
+  const ageConcernsOptions = ["Baby", "Child", "Old", "Pets"];
+  const budgetOptions = ["Budget", "Mid-range", "Luxury"];
+  const activityOptions = ["Hiking", "Beach", "Museum", "Shopping", "Dining"];
+  
   const fetchCityData = async (query) => {
     try {
-      const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=6a4330ecce54d6aa71d8aad4bd4ddca6`);
+      const response = await axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=6a4330ecce54d6aa71d8aad4bd4ddca6`
+      );
       const cityData = {
         cityName: response.data.name,
         latitude: response.data.coord.lat,
@@ -46,7 +49,7 @@ const PlanATrip = () => {
       };
       setCitySuggestions([cityData]);
     } catch (error) {
-      console.error('Error fetching city data:', error);
+      console.error("Error fetching city data:", error);
       setCitySuggestions([]);
     }
   };
@@ -66,18 +69,26 @@ const PlanATrip = () => {
 
   const handleAgeConcernChange = (value) => {
     setAgeConcern((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
     );
   };
 
   const handleActivityChange = (value) => {
     setPreferredActivities((prev) =>
-      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
     );
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
+    const { _id } = user.data._id;
+    console.log(user.data._id);
+
     const requirements = {
+      userId: _id,
       boardingPoint,
       destination,
       company,
@@ -88,8 +99,22 @@ const PlanATrip = () => {
       preferredActivities,
     };
 
+    try {
+      const response = await axios.post(
+        "http://localhost:3500/requirements/save-requirement",
+        requirements
+      );
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Error saving requirement:", error);
+    }
+
+    if (user) {
+      console.log("User:", user);
+    }
+
     console.log(requirements);
-    alert('Requirements submitted successfully!');
+    alert("Requirements submitted successfully!");
   };
 
   return (
@@ -115,7 +140,8 @@ const PlanATrip = () => {
                     className="cursor-pointer p-2 hover:bg-gray-200"
                     onClick={() => handleCitySelect(city, setBoardingPoint)}
                   >
-                    {city.cityName} (Lat: {city.latitude}, Lon: {city.longitude})
+                    {city.cityName} (Lat: {city.latitude}, Lon: {city.longitude}
+                    )
                   </li>
                 ))}
               </ul>
@@ -139,7 +165,8 @@ const PlanATrip = () => {
                     className="cursor-pointer p-2 hover:bg-gray-200"
                     onClick={() => handleCitySelect(city, setDestination)}
                   >
-                    {city.cityName} (Lat: {city.latitude}, Lon: {city.longitude})
+                    {city.cityName} (Lat: {city.latitude}, Lon: {city.longitude}
+                    )
                   </li>
                 ))}
               </ul>
@@ -182,7 +209,9 @@ const PlanATrip = () => {
           <div>
             <input
               type="date"
-              onChange={(e) => setSinceWhen(format(new Date(e.target.value), 'yyyy-MM-dd'))}
+              onChange={(e) =>
+                setSinceWhen(format(new Date(e.target.value), "yyyy-MM-dd"))
+              }
               className="input input-bordered w-full mb-4"
             />
           </div>
@@ -192,7 +221,9 @@ const PlanATrip = () => {
           <div>
             <input
               type="date"
-              onChange={(e) => setTillWhen(format(new Date(e.target.value), 'yyyy-MM-dd'))}
+              onChange={(e) =>
+                setTillWhen(format(new Date(e.target.value), "yyyy-MM-dd"))
+              }
               className="input input-bordered w-full mb-4"
             />
           </div>
@@ -238,11 +269,17 @@ const PlanATrip = () => {
             </button>
           )}
           {step < motivationalMessages.length - 1 ? (
-            <button className="btn btn-primary bg-gray-700 rounded-full text-white hover:bg-gray-500 border-none" onClick={handleNext}>
+            <button
+              className="btn btn-primary bg-gray-700 rounded-full text-white hover:bg-gray-500 border-none"
+              onClick={handleNext}
+            >
               Next
             </button>
           ) : (
-            <button className="btn bg-gradient-to-r from-orange-primary to-orange-secondary text-white" onClick={submitForm}>
+            <button
+              className="btn bg-gradient-to-r from-orange-primary to-orange-secondary text-white"
+              onClick={submitForm}
+            >
               Submit
             </button>
           )}

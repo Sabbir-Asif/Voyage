@@ -5,6 +5,7 @@ import {
   getTripDetailsService,
   updateTripDetailService,
   deleteTripDetailService,
+  findTripDetailsByUserId,
 } from "./tripDetail.service";
 
 // Controller to create a new TripDetail
@@ -33,6 +34,30 @@ const getTripDetails = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error fetching trip details:", err);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const getTripDetailsByUserId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userId = req.query.userId as string;
+
+  if (!userId) {
+    res.status(400).json({ message: "userId is required" });
+    return;
+  }
+
+  try {
+    const tripDetails = await findTripDetailsByUserId(userId);
+
+    if (!tripDetails) {
+      res.status(404).json({ message: "Trip details not found for this user" });
+    } else {
+      res.status(200).json(tripDetails);
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch trip details", error });
   }
 };
 
@@ -87,4 +112,5 @@ export const TripDetailControllers = {
   getTripDetails,
   updateTripDetail,
   deleteTripDetail,
+  getTripDetailsByUserId,
 };
