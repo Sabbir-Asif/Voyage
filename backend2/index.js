@@ -8,11 +8,9 @@ const fs = require('fs');
 const cors = require('cors');
 const Image = require('./models/Image');
 
-
 const app = express();
 app.use(express.json());
 app.use(cors());
-
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -30,7 +28,6 @@ const minioClient = new Minio.Client({
     accessKey: process.env.MINIO_ROOT_USER,
     secretKey: process.env.MINIO_ROOT_PASSWORD,
 });
-
 
 minioClient.bucketExists(process.env.MINIO_BUCKET, (err) => {
     if (err) {
@@ -57,7 +54,6 @@ app.post('/search', async (req, res) => {
         if (images.length === 0) {
             return res.status(404).json({ message: 'No images found for the given userId and tripId.' });
         }
-
 
         const responses = images.map((image, index) => `${index}. ${image.llmResponse}`);
         const formattedResponses = responses.join('\n\n');
