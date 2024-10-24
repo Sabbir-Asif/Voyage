@@ -13,18 +13,46 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const YourTrip = () => {
   const [itinerary, setItinerary] = useState("");
   const [loading, setLoading] = useState(false);
-  const [tripDetails, setTripDetails] = useState(null)
+  const [tripDetails, setTripDetails] = useState(null);
   const { user } = useContext(AuthContext);
-  console.log(user?._id);
+  const userId = user?._id;
 
   const location = useLocation();
   const requirementId = location.state;
 
   console.log("req", requirementId);
 
-  useEffect(()=> {
-    
-  }, [])
+  useEffect(() => {
+    const fetchTripDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3500/trip-details/details`,
+          {
+            params: { userId },
+          }
+        );
+
+        if (response.status === 200) {
+          setTripDetails(response.data);
+          console.log(tripDetails)
+        } else {
+          setError("Failed to fetch trip details.");
+        }
+      } catch (error) {
+        if (error.response) {
+          setError(`Error: ${error.response.data}`);
+        } else if (error.request) {
+          setError("No response received.");
+        } else {
+          setError(`Error: ${error.message}`);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTripDetails();
+  }, [userId]);
 
   // Example trip data (you can replace this with dynamic data from your application)
   const tripData = {
