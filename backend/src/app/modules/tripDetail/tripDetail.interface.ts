@@ -1,11 +1,21 @@
-type checkedItinerary = {
-    place: string, 
-    dayNo: number,
-    imageDB: string, 
-    
+type Activity = {
+  day: number;
+  title: string;
+  description: string;
+  place: string;
+  proTip: string;
 };
 
-export type tripDetail = {
-  username: string;
-  email: string;
+type Itinerary = {
+  place: string;
+  dayNo: number;
+  imageDBName: string;
+  description: string;
+};
+
+export type TripDetail = {
+  userId: string;
+  requirementsId: string;
+  checkedItineraries: Itinerary[];
+  suggestedActivities: Activity[];
 };

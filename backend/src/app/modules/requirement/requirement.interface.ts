@@ -1,8 +1,14 @@
+export type Location = {
+  cityName: string;
+  latitude: number;
+  longitude: number;
+};
+
 export type Requirement = {
-  boardingPoint: string;
-  destination: string;
+  boardingPoint: Location;
+  destination: Location;
   company: string;
-  ageConcern: string;
+  ageConcern: string[];
   sinceWhen: Date;
   tillWhen: Date;
   budgetType: string;

@@ -79,6 +79,32 @@ const searchUsers = async (req: Request, res: Response) => {
   }
 };
 
+// New Controller function to handle update user requests
+// const updateUser = async (req: Request, res: Response) => {
+//   try {
+//     const { userId } = req.params; // Get the userId from the route params
+//     const updateData: Partial<User> = req.body; // Partial data to update
+
+//     // Check if the user exists
+//     const existingUser = await UserServices.getUserById(userId);
+//     if (!existingUser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // Call service to update user details
+//     const updatedUser = await UserServices.updateUser(userId, updateData);
+
+//     return res.status(200).json({
+//       success: true,
+//       message: "User updated successfully",
+//       data: updatedUser,
+//     });
+//   } catch (err) {
+//     console.error("Error while updating user:", err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 export const UserControllers = {
   createUser,
   getUsers,
