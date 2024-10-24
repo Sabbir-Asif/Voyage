@@ -1,8 +1,9 @@
 
+
 const LandingPage = () => {
     return (
         <div className="font-poppins">
-            {/* <Navbar /> */}
+            {/* <NavBar /> */}
             <div className="hero min-h-screen">
                 <div className="hero-content text-center">
                     <div className="max-w-xl">
