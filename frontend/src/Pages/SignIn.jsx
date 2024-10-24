@@ -28,7 +28,7 @@ const SignIn = () => {
         <div className="flex gap-12 flex-shrink-0 w-full shadow-2xl bg-base-100 rounded-r-lg">
           <div className="bg-blue-secondary px-20 rounded-l-lg flex flex-col justify-center items-center">
             <h1 className="text-5xl text-center pb-8 font-bold text-cream-primary">
-              Stack-Underflow
+              Voyage
             </h1>
             <TbStackBack className="text-8xl text-cream-primary" />
           </div>
