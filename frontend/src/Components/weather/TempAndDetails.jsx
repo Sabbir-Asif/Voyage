@@ -56,7 +56,7 @@ const TempAndDetails = ({ weather: {
     ]
     return (
         <div>
-            <div className="flex items-center justify-center py-6 text-xl text-cyan-300">
+            <div className="flex items-center justify-center mt-1 text-xl text-cream-primary">
                 <p>{details}</p>
             </div>
 
@@ -65,22 +65,22 @@ const TempAndDetails = ({ weather: {
                     {
                         horizzontalDetails.map(({ id, Icon, title, value }) => (
                             <div key={id} className="flex flex-row items-center">
-                                <Icon size={30} />
+                                <Icon size={30} className="text-orange-primary" />
                                 <p className="font-light ml-1">
                                     {`${title}: `}
-                                    <span className="font-medium ml-1">{value}</span>
+                                    <span className="font-medium ml-1 text-cream-primary">{value}</span>
                                 </p>
                             </div>
                         ))
                     }
                 </div>
-                <p className="text-5xl">{`${temp.toFixed()}°`}</p>
+                <p className="text-5xl text-orange-primary">{`${temp.toFixed()}°`}</p>
                 <div className="flex flex-col space-y-3 items-start">
                     {
                         verticalDetails.map(({ id, Icon, title, value }) => (
                             <div className="flex font-light text-sm items-center justify-center">
-                                <Icon size={18} className="mr-1" />
-                                {`${title}: `} <span className="font-medium ml-1">{value}</span>
+                                <Icon size={18} className="mr-1 text-orange-primary" />
+                                {`${title}: `} <span className="font-medium ml-1 text-cream-primary">{value}</span>
                             </div>
                         ))
                     }

@@ -24,7 +24,7 @@ const WeatherApp = () => {
     return (
         <>
             {/* <h2 className="text-blue-primary text-4xl font-bold text-center my-5 underline ">Weather Update</h2> */}
-            <div className="mx-auto mt-4 py-5 px-20 bg-base-100 border-2 border-blue-primary">
+            <div className="mx-auto mt-4 py-5 px-20 mb-6 max-w-5xl">
                 {
                     weather && (
                         <>

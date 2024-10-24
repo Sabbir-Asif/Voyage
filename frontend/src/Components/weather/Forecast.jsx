@@ -2,11 +2,10 @@ import { div } from "framer-motion/client";
 
 const Forecast = ({title, data}) => {
 
-    console.log(data.icon);
   return (
     <div>
         <div className="flex items-center justify-start mt-6">
-            <p className="font-medium uppercase">{title}</p>
+            <p className="font-medium uppercase text-orange-secondary">{title}</p>
         </div>
         <hr className="my-1" />
 
@@ -18,7 +17,7 @@ const Forecast = ({title, data}) => {
                     className="flex flex-col items-center justify-center"
                     >
                         <p className="font-light text-sm">{data.title}</p>
-                        <p className="font-medium">{`${data.temp.toFixed()}°`}</p>
+                        <p className="font-medium text-orange-primary">{`${data.temp.toFixed()}°`}</p>
                     </div>
                 ))
             }

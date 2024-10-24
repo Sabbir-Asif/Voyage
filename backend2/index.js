@@ -11,13 +11,14 @@ const Image = require('./models/Image');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.log(err));
 
@@ -41,41 +42,51 @@ minioClient.bucketExists(process.env.MINIO_BUCKET, (err) => {
         console.log('Bucket already exists');
     }
 });
+
+
 app.post('/search', async (req, res) => {
-    const { prompt } = req.body;
-    if (!prompt) {
-        return res.status(400).send('Prompt is required.');
+    const { userId, tripId, prompt } = req.body;
+    console.log(userId, tripId);
+
+    if (!userId || !tripId || !prompt) {
+        return res.status(400).send('UserId, TripId, and prompt are required.');
     }
-
-
     try {
-        const images = await Image.find({}, 'llmResponse url');
+        const images = await Image.find({ userId, tripId }, 'llmResponse url');
+
+        if (images.length === 0) {
+            return res.status(404).json({ message: 'No images found for the given userId and tripId.' });
+        }
 
 
         const responses = images.map((image, index) => `${index}. ${image.llmResponse}`);
-       
         const formattedResponses = responses.join('\n\n');
+
 
         const ollamaResponse = await axios.post('http://localhost:11434/api/chat', {
             model: "llama3.2",
             "messages": [
                 {
                     "role": "user",
-                    "content": `Based on the following numbered descriptions, which one best matches this prompt: "${prompt}"? Only return the best-fit index number.\n\nDescriptions:\n\n${formattedResponses}`
+                    "content": `Find the number in Based on the following numbered descriptions, which one best matches this prompt: "${prompt}"? Only return the best-fit index number.\n\nDescriptions:\n\n${formattedResponses}`
                 }
             ],
             "stream": false
         });
 
+
         console.log('Ollama Response:', JSON.stringify(ollamaResponse.data, null, 2));
 
 
-        // Extract the matched index from Ollama's message content
-        const matchedIndex = parseInt(ollamaResponse.data.message.content.trim());
-
-
-        // Retrieve the corresponding URL based on the index
-        const bestFitImage = images[matchedIndex];
+        const responseText = ollamaResponse.data.message.content
+        console.log(responseText);
+        regex = /(\d+)/;
+        const match = responseText.match(regex);
+        let number = 0
+        if (match && match[1]) {
+            number = parseInt(match[1], 10);
+        }
+        const bestFitImage = images[number];
 
 
         if (bestFitImage) {
@@ -90,12 +101,13 @@ app.post('/search', async (req, res) => {
 });
 
 
-
-
+// Modified Upload Endpoint
 app.post('/upload', upload.single('image'), async (req, res) => {
-    const { description, album } = req.body;
-    if (!description || !req.file) {
-        return res.status(400).send('Description and image are required.');
+    const { userId, tripId, description, album } = req.body;
+
+
+    if (!userId || !tripId || !description || !req.file) {
+        return res.status(400).send('UserId, TripId, description, and image are required.');
     }
 
 
@@ -126,6 +138,42 @@ app.post('/upload', upload.single('image'), async (req, res) => {
                 const imgPath = `/Users/md.sabbirhosen/Desktop/projects/voyage/backend2/${fileName}`;
                 const imageBuffer = fs.readFileSync(imgPath);
                 const imageBase64 = imageBuffer.toString('base64');
+
+
+                try {
+                    const output = await axios.post('http://localhost:11434/api/generate', {
+                        "model": "llava",
+                        "prompt": "Tell me about the image (in 1-2 line)",
+                        "images": [imageBase64],
+                        "stream": false
+                    });
+
+
+                    // Save the image details in MongoDB
+                    const newImage = new Image({
+                        url: imageUrl,
+                        description,
+                        album: album || '',
+                        userId,   // Save userId
+                        tripId,   // Save tripId
+                        llmResponse: output.data.response
+                    });
+
+
+                    await newImage.save();
+
+
+                    res.status(201).json({
+                        message: 'Image uploaded and analyzed successfully!',
+                        imageUrl: imageUrl,
+                        analysis: output.data.response
+                    });
+
+
+                } catch (error) {
+                    console.log('Error:', error);
+                    res.status(500).send('Error analyzing the image.');
+                }
             });
 
 
@@ -139,6 +187,39 @@ app.post('/upload', upload.single('image'), async (req, res) => {
         }
     });
 });
+
+app.post('/all', async (req, res) => {
+    const { userId, tripId } = req.body;
+
+
+    if (!userId || !tripId) {
+        return res.status(400).json({ message: 'userId and tripId are required.' });
+    }
+
+
+    try {
+
+
+        const images = await Image.find({ userId, tripId }, 'url'); // Only select the 'url' field
+
+
+        // Check if images are found
+        if (images.length === 0) {
+            return res.status(404).json({ message: 'No images found for the given userId and tripId.' });
+        }
+
+
+        // Extract the URLs from the images and send them in the response
+        const imageUrls = images.map(image => image.url);
+        return res.status(200).json({ imageUrls });
+
+
+    } catch (error) {
+        console.error('Error fetching images:', error);
+        return res.status(500).json({ message: 'Error fetching images.' });
+    }
+});
+
 
 
 const PORT = process.env.PORT || 5000;
