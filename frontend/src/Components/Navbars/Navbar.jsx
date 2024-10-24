@@ -1,71 +1,133 @@
-import { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { TbStackBack } from "react-icons/tb";
-import { AuthContext } from "../Authentication/AuthProvider";
 
-const Navbar = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { user, logOut, setUser } = useContext(AuthContext);
+import { IoHome } from "react-icons/io5";
+import { FaRegPaperPlane } from "react-icons/fa";
+import { PiGraphBold } from "react-icons/pi";
+import { FaRegUserCircle } from "react-icons/fa";
+import { IoStatsChartOutline } from "react-icons/io5";
+import { useContext } from "react";
+import { userSignOut } from "../../firebase/GoogleAuth";
+import { RiAdminLine } from "react-icons/ri";
+
+import { AuthContext } from "../../contexts/AuthProvider";
+
+const NavBar = () => {
+  const { userInfo, setUserInfo } = useContext(AuthContext) || {};
   const navigate = useNavigate();
 
-  const handleAuthClick = () => {
-    if (user) {
-      logOut()
-        .then(() => {
-          window.location.reload();
-        })
-        .catch((error) => console.error(error));
-    } else {
-      navigate("/sign-in");
-    }
+  const handleLogOut = () => {
+    userSignOut();
+    setUserInfo(null);
+    console.log("User after logout: ", userInfo);
+    navigate("/sign-in");
   };
 
+  const navLinks = (
+    <>
+      <li
+        className="tooltip tooltip-bottom text-2xl text-[#c1793f] mx-2"
+        data-tip="Home"
+      >
+        <NavLink to="/">
+          <IoHome />
+        </NavLink>
+      </li>
+      <li
+        className={`tooltip tooltip-bottom text-2xl text-[#c1793f] mx-2 ${
+          userInfo?.role === "user" ? "visible" : "hidden"
+        }`}
+        data-tip="My Profile"
+      >
+        <NavLink to="/user">
+          <FaRegUserCircle />
+        </NavLink>
+      </li>
+      <li
+        className={`tooltip tooltip-bottom text-2xl text-[#c1793f] mx-2 ${
+          userInfo?.role === "admin" ? "visible" : "hidden"
+        }`}
+        data-tip="Admin"
+      >
+        <NavLink to="/admin">
+          <RiAdminLine />
+        </NavLink>
+      </li>
+      <li
+        className="tooltip tooltip-bottom text-2xl text-[#c1793f] mx-2"
+        data-tip="Submit Paper"
+      >
+        <NavLink to="/submit-paper">
+          <FaRegPaperPlane />
+        </NavLink>
+      </li>
+      <li
+        className="tooltip tooltip-bottom text-2xl text-[#c1793f] mx-2"
+        data-tip="View Knowledge Graph"
+      >
+        <NavLink to="/graph">
+          <PiGraphBold />
+        </NavLink>
+      </li>
+      <li
+        className="tooltip tooltip-bottom text-2xl text-[#c1793f] mx-2"
+        data-tip="Statistics"
+      >
+        <NavLink to="/statistics">
+          <IoStatsChartOutline />
+        </NavLink>
+      </li>
+    </>
+  );
   return (
-    <div className="relative font-poppins">
-      <div className="navbar bg-blue-secondary font-manrope md:px-6">
+    <>
+      <div className="navbar bg-[#DaB495] px-10">
         <div className="navbar-start">
-          <NavLink to={"/home/posts"}>
-            <span className="flex items-center gap-1">
-              <TbStackBack className="text-5xl text-base-200" />
-              <h2 className="text-lg text-white md:text-xl font-medium italic font-poppins">
-                Stack-Underflow
-              </h2>
-            </span>
-          </NavLink>
-        </div>
-        
-        <div className="navbar-end gap-1 md:gap-4">
-          {user ? (
-            <div className="relative">
-              <button
-                className="text-md mr-2 text-white font-poppins border-2 border-blue-primary rounded-full p-1"
-                onClick={() => setIsDrawerOpen(true)}
+          <div className="dropdown">
+            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <img
-                  src={user.imageUrl || 'https://via.placeholder.com/150'}
-                  alt="Profile"
-                  className="rounded-full w-10 h-10"
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h8m-8 6h16"
                 />
-              </button>
-
-              {isDrawerOpen && (
-                <div className="fixed top-20 right-2 w-80 shadow-lg z-50">
-                  <Profile user={user} setUser={setUser} setIsDrawerOpen={setIsDrawerOpen} />
-                </div>
-              )}
+              </svg>
             </div>
-          ) : (
-            <button
-              onClick={handleAuthClick}
-              className="border px-3 rounded-full text-md italic text-white font-poppins"
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
-              Sign In
-            </button>
-          )}
+              {navLinks}
+            </ul>
+          </div>
+          <a className="btn btn-ghost text-3xl text-[#8d572b] font-bold">
+            BKMS
+          </a>
         </div>
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal px-1">{navLinks}</ul>
+        </div>
+        {userInfo ? (
+          <div
+            className="navbar-end text-xl font-semibold text-[#c1793f] cursor-pointer hover:text-[#95663f]"
+            onClick={handleLogOut}
+          >
+            Log Out
+          </div>
+        ) : (
+          <div className="navbar-end text-xl font-semibold text-[#c1793f]">
+            <NavLink to="/sign-up">Register</NavLink>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
-export default Navbar;
+export default NavBar;
