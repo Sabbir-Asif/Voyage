@@ -7,7 +7,6 @@ import Profile from "./Profile";
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { user, logOut, setUser } = useContext(AuthContext);
-  console.log(user);
   const navigate = useNavigate();
 
   const handleAuthClick = () => {
