@@ -24,7 +24,7 @@ const GallaryPage = () => {
       <h2 className="text-gray-600">
         <span className="text-xl font-semibold">Explore the Moments:</span>
       </h2>
-      <div className="mt-4">
+      <div className="mt-6">
         {trips.length > 0? (
           trips.map((trip) => (
             <TripCard key={trip._id} trip = {trip} />

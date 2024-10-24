@@ -8,6 +8,7 @@ import YourTrip from "../Components/YourTrip/YourTrip";
 import WeatherApp from "../Components/weather/WeatherApp";
 import ErrorPage from "../Pages/ErrorPage";
 import GallaryPage from "../Components/Gallary/GallaryPage";
+import TripDetails from "../Components/Gallary/TripDetails";
 
 const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
             {
                 path: 'gallary',
                 element: <GallaryPage />
+            },
+            {
+                path: 'trip-details/:tripId',
+                element: <TripDetails />
             }
         ]
     }
