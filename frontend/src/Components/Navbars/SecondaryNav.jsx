@@ -53,7 +53,7 @@ const SecondaryNav = () => {
           </li>
           <li>
             <NavLink
-              to="/gallary"
+              to="/home/gallary"
               className={({ isActive }) =>
                 isActive
                   ? "underline text-gray-600"

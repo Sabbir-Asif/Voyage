@@ -6,6 +6,8 @@ import Home from "../Components/Home/Home";
 import PlanATrip from "../Components/TripPlan/PlanATrip";
 import YourTrip from "../Components/YourTrip/YourTrip";
 import WeatherApp from "../Components/weather/WeatherApp";
+import ErrorPage from "../Pages/ErrorPage";
+import GallaryPage from "../Components/Gallary/GallaryPage";
 
 const router = createBrowserRouter([
     {
@@ -19,10 +21,12 @@ const router = createBrowserRouter([
     {
       path: "/",
       element: <LandingPage />,
+      errorElement: <ErrorPage />
     },
     {
         path: "/home",
         element: <Home />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: 'plan-trip',
@@ -35,6 +39,10 @@ const router = createBrowserRouter([
             {
                 path: 'weather',
                 element: <WeatherApp />
+            },
+            {
+                path: 'gallary',
+                element: <GallaryPage />
             }
         ]
     }
