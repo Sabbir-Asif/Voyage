@@ -6,6 +6,7 @@ import {
   updateTripDetailService,
   deleteTripDetailService,
   findTripDetailsByUserId,
+  addTripDetailAsTextService,
 } from "./tripDetail.service";
 
 // Controller to create a new TripDetail
@@ -24,7 +25,7 @@ const createTripDetail = async (req: Request, res: Response) => {
   }
 };
 
-const getTripDetails = async (req: Request, res: Response) => {
+export const getTripDetails = async (req: Request, res: Response) => {
   try {
     const tripDetails = await getTripDetailsService();
     res.status(200).json({
@@ -34,6 +35,37 @@ const getTripDetails = async (req: Request, res: Response) => {
   } catch (err) {
     console.error("Error fetching trip details:", err);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const addTripDetailAsText = async (req: Request, res: Response) => {
+  try {
+    const { userId, requirementsId, details } = req.body; // Assuming the text is sent in the request body
+
+    // Validate input
+    if (!details || typeof details !== "string") {
+      return res
+        .status(400)
+        .json({ error: "Text is required and must be a string" });
+    }
+
+    // Call service to add trip detail
+    const tripDetail = await addTripDetailAsTextService(
+      userId,
+      requirementsId,
+      details
+    );
+
+    // Send response
+    res.status(201).json({
+      message: "Trip detail saved successfully",
+      tripDetail,
+    });
+  } catch (error) {
+    console.error("Error saving trip detail:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while saving the trip detail" });
   }
 };
 
@@ -109,6 +141,7 @@ const deleteTripDetail = async (req: Request, res: Response) => {
 
 export const TripDetailControllers = {
   createTripDetail,
+  addTripDetailAsText,
   getTripDetails,
   updateTripDetail,
   deleteTripDetail,

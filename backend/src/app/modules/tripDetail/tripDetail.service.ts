@@ -17,6 +17,24 @@ export const getTripDetailsService = async (): Promise<TripDetail[]> => {
   return await TripDetailModel.find(); // Fetch all trip details from the database
 };
 
+export const addTripDetailAsTextService = async (
+  userId: string,
+  requirementsId: string,
+  text: string
+) => {
+  // Create a new trip detail with only the `details` field populated
+  const newTripDetail = new TripDetailModel({
+    userId: userId,
+    requirementsId: requirementsId,
+    checkedItineraries: [], // Empty array as it's an array of objects
+    suggestedActivities: [], // Empty array as it's an array of objects
+    details: text,
+  });
+
+  await newTripDetail.save();
+  return newTripDetail;
+};
+
 // get trip detail for specific user id
 // tripDetail.service.ts
 

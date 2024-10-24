@@ -11,6 +11,11 @@ const getRequirementById = async ({ id }: { id: string }) => {
   return result;
 };
 
+export const getRequirementsByUserId = async (userId: string) => {
+  const results = await RequirementModel.find({ userId });
+  return results;
+};
+
 const getAllRequirements = async () => {
   const result = await RequirementModel.find();
   return result;
@@ -37,4 +42,5 @@ export const RequirementServices = {
   getAllRequirements,
   deleteRequirementById,
   updateRequirementById,
+  getRequirementsByUserId,
 };

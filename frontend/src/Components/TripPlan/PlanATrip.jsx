@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
 import { AuthContext } from "../Authentication/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const PlanATrip = () => {
   const [step, setStep] = useState(0);
@@ -14,10 +15,13 @@ const PlanATrip = () => {
   const [budgetType, setBudgetType] = useState("");
   const [preferredActivities, setPreferredActivities] = useState([]);
   const [citySuggestions, setCitySuggestions] = useState([]);
+  const [requirementId, setRequirementId] = useState(null);
 
   const { user } = useContext(AuthContext);
   // const { _id } = user?.data._id;
   console.log(user._id);
+
+  const navigate = useNavigate();
 
   const motivationalMessages = [
     "Let's start your journey by setting your boarding location!",
@@ -108,15 +112,17 @@ const PlanATrip = () => {
         requirements
       );
       console.log("Response:", response.data);
+      setRequirementId(response.data._id);
+      navigate("/home/your-trip", { state: response.data._id });
     } catch (error) {
       console.error("Error saving requirement:", error);
+    } finally {
+      console.log("Requirement ID: ", requirementId);
     }
 
     if (user) {
       console.log("User:", user);
     }
-
-    console.log(requirements);
   };
 
   return (

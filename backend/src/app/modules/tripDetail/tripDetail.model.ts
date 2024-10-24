@@ -7,23 +7,23 @@ const mongoose = require("mongoose");
 const activitySchema = new mongoose.Schema({
   day: {
     type: Number,
-    required: true,
+    required: false,
   },
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
   place: {
     type: String,
-    required: true,
+    required: false,
   },
   proTip: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 
@@ -31,19 +31,19 @@ const activitySchema = new mongoose.Schema({
 const itinerarySchema = new mongoose.Schema({
   place: {
     type: String,
-    required: true,
+    required: false,
   },
   dayNo: {
     type: Number,
-    required: true,
+    required: false,
   },
   imageDBName: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 
@@ -51,14 +51,18 @@ const itinerarySchema = new mongoose.Schema({
 const tripDetailSchema = new mongoose.Schema({
   userId: {
     type: String, // You can also use mongoose.Schema.Types.ObjectId if it refers to a user in another collection
-    required: true,
+    required: false,
   },
   requirementsId: {
     type: String, // Same here, ObjectId can be used if referring to another collection
-    required: true,
+    required: false,
   },
   checkedItineraries: [itinerarySchema],
   suggestedActivities: [activitySchema],
+  details: {
+    type: String,
+    required: true
+  }
 });
 
 // Create the TripDetail model
