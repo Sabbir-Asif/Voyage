@@ -17,7 +17,7 @@ const GallaryPage = () => {
     }
   }, [user]);
 
-  console.log(trips);
+//   console.log(trips);
 
   return (
     <div className="max-w-5xl font-poppins mx-auto mt-6">

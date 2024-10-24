@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { TbStackBack } from "react-icons/tb";
+import { MdOutlineTravelExplore } from "react-icons/md";
 import { AuthContext } from "../Authentication/AuthProvider";
 import Profile from "./Profile";
 
@@ -27,7 +27,7 @@ const Navbar = () => {
         <div className="navbar-start">
           <NavLink to={"/"}>
             <span className="flex items-center gap-1">
-              {/* <TbStackBack className="text-5xl" /> */}
+              <MdOutlineTravelExplore className="text-4xl text-orange-secondary" />
               <h2 className="text-3xl font-bold italic font-poppins">
                 Voyage
               </h2>
