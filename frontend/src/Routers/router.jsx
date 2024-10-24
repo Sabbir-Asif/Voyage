@@ -1,21 +1,21 @@
 import { createBrowserRouter } from "react-router-dom";
 import LandingPage from "../Pages/LandingPage";
-import SignIn from "../Pages/Authentication/SignIn";
 import SignUp from "../Pages/Authentication/SignUp";
+import SignIn from "../Pages/Authentication/SignIn";
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <LandingPage />,
-  },
-  {
-    path: "/sign-in",
-    element: <SignIn />,
-  },
-  {
-    path: "/sign-up",
-    element: <SignUp />,
-  },
-]);
+    {
+        path: 'sign-up',
+        element: <SignUp />
+    },
+    {
+        path: 'sign-in',
+        element: <SignIn />
+    },
+    {
+      path: "/",
+      element: <LandingPage />,
+    },
+  ]);
 
 export default router;

@@ -1,143 +1,77 @@
-import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import { googleSignIn } from "../../firebase/GoogleAuth";
-import { useRef } from "react";
-import {
-  emailPasswordSignIn,
-  sendResetEmail,
-} from "../../firebase/EmailPasswordAuth";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../contexts/AuthProvider";
+import { TbStackBack } from "react-icons/tb";
 
 const SignIn = () => {
+  const { signIn } = useContext(AuthContext);
   const navigate = useNavigate();
-  const emailRef = useRef();
-  const passwordRef = useRef();
-  // const navigateUser = () => {
-  //   const { user } = useContext(AuthContext);
-  //   console.log("User logged in: ", user);
-  // };
+  const [error, setError] = useState("");
 
-  // if (user) {
-  //   console.log("user: ", user);
-  // } else console.log("NONE");
-
-  const navigateUser = (role) => {
-    if (role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/user");
-    }
-  };
-
-  const handleEmailPasswordSignIn = (e) => {
-    e.preventDefault();
-    const email = emailRef.current.value;
-    const password = passwordRef.current.value;
-    emailPasswordSignIn(email, password);
-  };
-
-  const handleGoogleLogIn = async () => {
-    try {
-      const user = await googleSignIn();
-      if (user) {
-        console.log("Login successful: ", user);
-        navigateUser(user.role);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleResetPassword = async () => {
-    const email = emailRef.current.value;
-    if (!email) {
-      console.log("Email not given.");
-      return;
-    }
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
 
     try {
-      await sendResetEmail(email);
+      await signIn(email, password);
+      navigate("/");
     } catch (error) {
-      console.log("Error occurred while sending password reset email.", error);
+      setError(error.message);
     }
   };
 
   return (
-    <>
-      <div className="bg-[#c1793f]">
-        <div className="hero min-h-screen bg-base-200">
-          <div className="hero-content flex-col">
-            <div className="text-center lg:text-left mb-16">
-              <h1 className="text-5xl font-bold text-center">Login now!</h1>
-              <p className="py-6 text-xl font-semibold">
-                Welcome to the Bangla NLP Knowledge Graph, please log in.
-              </p>
-            </div>
-            <div className="card shrink-0 w-full max-w-xl shadow-2xl">
-              <form className="card-body">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Email</span>
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="email"
-                    className="input input-bordered"
-                    ref={emailRef}
-                    required
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Password</span>
-                  </label>
-                  <input
-                    type="password"
-                    placeholder="password"
-                    className="input input-bordered"
-                    ref={passwordRef}
-                    required
-                  />
-                  <label className="label">
-                    <p
-                      className="label-text-alt link link-hover"
-                      onClick={handleResetPassword}
-                    >
-                      Forgot password?
-                    </p>
-                  </label>
-                </div>
-                <div className="form-control mt-6">
-                  <button
-                    type="submit"
-                    className="btn btn-primary border-none text-black text-base font-semibold"
-                    onClick={handleEmailPasswordSignIn}
-                  >
-                    Login
-                  </button>
-                </div>
-                <div className="form-control mt-2">
-                  <button
-                    className="btn btn-primary border-none text-white"
-                    onClick={handleGoogleLogIn}
-                  >
-                    <FcGoogle className="text-xl" />
-                    <span className="text-black font-bold">
-                      Sign In With Google
-                    </span>
-                  </button>
-                </div>
-                <div className="text-center mt-5">
-                  Not registered yet?{" "}
-                  <span className="underline text-primary font-bold text-lg">
-                    <Link to="/sign-up">Create account.</Link>
-                  </span>
-                </div>
-              </form>
-            </div>
+    <div className="hero flex justify-center min-h-screen bg-base-200 font-poppins">
+      <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="flex gap-12 flex-shrink-0 w-full shadow-2xl bg-base-100 rounded-r-lg">
+          <div className="bg-blue-secondary px-20 rounded-l-lg flex flex-col justify-center items-center">
+            <h1 className="text-5xl text-center pb-8 font-bold text-cream-primary">
+              Stack-Underflow
+            </h1>
+            {/* <TbStackBack className="text-8xl text-cream-primary" /> */}
           </div>
+          <form onSubmit={handleLogin} className="pr-20 pl-10 py-20">
+            <h1 className="text-3xl font-bold text-center pb-5 text-blue-primary">Sign In</h1>
+            {error && <p className="text-red-500 text-center">{error}</p>}
+            <div className="form-control">
+              <label className="label">
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="input input-bordered"
+                required
+              />
+            </div>
+            <div className="form-control">
+              <label className="label">
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                className="input input-bordered"
+                required
+              />
+            </div>
+            <div className="form-control mt-6">
+              <button className="btn bg-blue-secondary hover:bg-[#86bbd8] text-cream-primary">
+                Sign In
+              </button>
+            </div>
+            <p className="text-center mt-4">
+              Don't have an account?{" "}
+              <Link to="/sign-up" className="text-blue-secondary hover:underline">
+                Sign Up
+              </Link>
+            </p>
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

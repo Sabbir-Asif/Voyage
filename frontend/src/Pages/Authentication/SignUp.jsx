@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { emailPasswordSignUp } from "../../firebase/EmailPasswordAuth";
 
 const SignUp = () => {
-  //   const navigate = useNavigate();
+
   const emailRef = useRef();
   const passwordRef = useRef();
   const usernameRef = useRef();
