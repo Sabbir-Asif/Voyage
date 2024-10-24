@@ -23,9 +23,9 @@ export const getTripDetailsService = async (): Promise<TripDetail[]> => {
 // Method to find trip details by userId
 export const findTripDetailsByUserId = async (
   userId: string
-): Promise<TripDetail | null> => {
+): Promise<TripDetail[] | null> => {
   try {
-    return await TripDetailModel.findOne({ userId }).exec();
+    return await TripDetailModel.find({ userId }).exec();
   } catch (error) {
     console.error("Error fetching trip details:", error);
     throw new Error("Could not fetch trip details");

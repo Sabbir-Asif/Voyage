@@ -15,6 +15,10 @@ const PlanATrip = () => {
   const [preferredActivities, setPreferredActivities] = useState([]);
   const [citySuggestions, setCitySuggestions] = useState([]);
 
+  const { user } = useContext(AuthContext);
+  // const { _id } = user?.data._id;
+  console.log(user._id);
+
   const motivationalMessages = [
     "Let's start your journey by setting your boarding location!",
     "Where are you planning to go?",
@@ -36,7 +40,7 @@ const PlanATrip = () => {
   const ageConcernsOptions = ["Baby", "Child", "Old", "Pets"];
   const budgetOptions = ["Budget", "Mid-range", "Luxury"];
   const activityOptions = ["Hiking", "Beach", "Museum", "Shopping", "Dining"];
-  
+
   const fetchCityData = async (query) => {
     try {
       const response = await axios.get(
@@ -84,12 +88,11 @@ const PlanATrip = () => {
   };
 
   const submitForm = async () => {
-    const { _id } = user.data._id;
-    console.log(user.data._id);
+    console.log(boardingPoint, destination);
 
     const requirements = {
-      userId: _id,
-      boardingPoint,
+      userId: user._id,
+      boardingPoint: {},
       destination,
       company,
       ageConcern,
@@ -114,7 +117,6 @@ const PlanATrip = () => {
     }
 
     console.log(requirements);
-    alert("Requirements submitted successfully!");
   };
 
   return (
@@ -177,7 +179,11 @@ const PlanATrip = () => {
         {step === 2 && (
           <div>
             <select
-              onChange={(e) => setCompany(e.target.value)}
+              onChange={(e) => {
+                e.preventDefault();
+                setCompany(e.target.value);
+                console.log(company);
+              }}
               className="select select-bordered w-full mb-4"
             >
               {options.map((option) => (
