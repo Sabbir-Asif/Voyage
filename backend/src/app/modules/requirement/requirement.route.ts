@@ -5,7 +5,7 @@ const router: Router = express.Router();
 
 router.post("/save-requirement", RequirementControllers.createRequirement);
 router.get("/get-requirements", RequirementControllers.getAllRequirements);
-router.get("/:id", RequirementControllers.getRequirementById);
+router.get("/get-requirements/:id", RequirementControllers.getRequirementById);
 router.put("/:id", RequirementControllers.updateRequirementById);
 
 // DELETE: Remove a requirement by ID

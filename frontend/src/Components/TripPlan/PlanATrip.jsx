@@ -92,7 +92,7 @@ const PlanATrip = () => {
 
     const requirements = {
       userId: user._id,
-      boardingPoint: {},
+      boardingPoint,
       destination,
       company,
       ageConcern,
@@ -131,7 +131,9 @@ const PlanATrip = () => {
             <input
               type="text"
               placeholder="Enter Boarding Location"
-              onChange={(e) => fetchCityData(e.target.value)}
+              onChange={(e) => {
+                fetchCityData(e.target.value);
+              }}
               className="input input-bordered w-full mb-4"
             />
             {citySuggestions.length > 0 && (
@@ -178,20 +180,24 @@ const PlanATrip = () => {
 
         {step === 2 && (
           <div>
-            <select
-              onChange={(e) => {
-                e.preventDefault();
-                setCompany(e.target.value);
-                console.log(company);
-              }}
-              className="select select-bordered w-full mb-4"
-            >
-              {options.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            {step === 2 && (
+              <div>
+                <select
+                  onChange={(e) => {
+                    e.preventDefault();
+                    setCompany(e.target.value); // Update company with selected option value
+                    console.log(company); // Optional: Log the selected company value
+                  }}
+                  className="select select-bordered w-full mb-4"
+                >
+                  {options.map((option) => (
+                    <option key={option.label} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         )}
 
