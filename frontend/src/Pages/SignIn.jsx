@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../Components/Authentication/AuthProvider";
 import { TbStackBack } from "react-icons/tb";
+import { MdOutlineTravelExplore } from "react-icons/md";
 
 const SignIn = () => {
   const { signIn } = useContext(AuthContext);
@@ -25,12 +26,12 @@ const SignIn = () => {
   return (
     <div className="hero flex justify-center min-h-screen bg-base-200 font-poppins">
       <div className="hero-content flex-col lg:flex-row-reverse">
-        <div className="flex gap-12 flex-shrink-0 w-full shadow-2xl bg-base-100 rounded-r-lg">
-          <div className="bg-blue-secondary px-20 rounded-l-lg flex flex-col justify-center items-center">
-            <h1 className="text-5xl text-center pb-8 font-bold text-cream-primary">
+        <div className="flex gap-12 flex-shrink-0 w-full shadow-2xl bg-orange-50 rounded-r-lg">
+          <div className="bg-gradient-to-r from-orange-primary to-orange-secondary px-20 rounded-l-lg flex flex-col justify-center items-center">
+            <h1 className="text-5xl text-center pb-8 font-bold text-base-100">
               Voyage
             </h1>
-            <TbStackBack className="text-8xl text-cream-primary" />
+            <MdOutlineTravelExplore className="text-8xl text-cream-primary" />
           </div>
           <form onSubmit={handleLogin} className="pr-20 pl-10 py-20">
             <h1 className="text-3xl font-bold text-center pb-5 text-blue-primary">Sign In</h1>
@@ -58,13 +59,13 @@ const SignIn = () => {
               />
             </div>
             <div className="form-control mt-6">
-              <button className="btn bg-blue-secondary hover:bg-[#86bbd8] text-cream-primary">
+              <button className="btn bg-gradient-to-r from-orange-secondary to-orange-primary hover:bg-[#86bbd8] text-base-100">
                 Sign In
               </button>
             </div>
             <p className="text-center mt-4">
               Don't have an account?{" "}
-              <Link to="/sign-up" className="text-blue-secondary hover:underline">
+              <Link to="/sign-up" className="text-orange-primary hover:underline">
                 Sign Up
               </Link>
             </p>

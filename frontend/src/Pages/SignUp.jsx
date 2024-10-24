@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../Components/Authentication/AuthProvider";
 import { TbStackBack } from "react-icons/tb";
+import { MdOutlineTravelExplore } from "react-icons/md";
 
 const SignUp = () => {
   const { createUser } = useContext(AuthContext);
@@ -28,11 +29,12 @@ const SignUp = () => {
   return (
     <div className="hero flex justify-center min-h-screen bg-base-200 font-poppins">
       <div className="hero-content flex-col lg:flex-row-reverse">
-        <div className="flex gap-12 flex-shrink-0 w-full shadow-2xl bg-base-100 rounded-r-lg">
-          <div className="bg-blue-secondary px-20 rounded-l-lg flex flex-col justify-center items-center">
-            <h1 className="text-5xl text-center pb-8 font-bold text-cream-primary">
+        <div className="flex gap-12 flex-shrink-0 w-full shadow-2xl bg-orange-50 rounded-r-lg">
+          <div className="bg-gradient-to-r from-orange-primary to-orange-secondary px-20 rounded-l-lg flex flex-col justify-center items-center">
+            <h1 className="text-5xl text-center pb-8 font-bold text-base-100">
               Voyage
             </h1>
+            <MdOutlineTravelExplore className="text-8xl text-cream-primary" />
           </div>
           <form onSubmit={handleSignUp} className="pr-20 pl-10 py-14">
             <h1 className="text-3xl font-bold text-center mb-8 text-blue-primary">Sign Up</h1>
@@ -65,13 +67,13 @@ const SignUp = () => {
               />
             </div>
             <div className="form-control mt-6">
-              <button className="btn bg-blue-secondary text-white hover:bg-[#86bbd8]">
+              <button className="btn bg-gradient-to-r from-orange-secondary to-orange-primary text-white hover:bg-[#86bbd8]">
                 Sign Up
               </button>
             </div>
             <p className="text-center mt-4">
               Already have an account?{" "}
-              <Link to="/sign-in" className="text-blue-secondary hover:underline">
+              <Link to="/sign-in" className="text-orange-primary hover:underline">
                 Sign In
               </Link>
             </p>
