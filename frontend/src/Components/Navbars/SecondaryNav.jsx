@@ -29,7 +29,7 @@ const SecondaryNav = () => {
             </li>
             <li>
                 <NavLink
-                    to="/weather-update"
+                    to="/home/weather"
                     className={({ isActive }) =>
                         isActive
                             ? "underline text-gray-600"
