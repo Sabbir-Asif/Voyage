@@ -25,11 +25,7 @@ const SignUp = () => {
           error
         )
       );
-
-    try {
-      
-    }
-  };
+  }
 
   const handleGoogleLogIn = () => {
     googleSignIn()

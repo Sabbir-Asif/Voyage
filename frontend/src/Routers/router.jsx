@@ -6,11 +6,11 @@ import SignIn from "../Pages/Authentication/SignIn";
 const router = createBrowserRouter([
     {
         path: 'sign-up',
-        element: <SignUp />
+        element: <h2>signin</h2>
     },
     {
         path: 'sign-in',
-        element: <SignIn />
+        element: <h2>signin</h2>
     },
     {
       path: "/",
