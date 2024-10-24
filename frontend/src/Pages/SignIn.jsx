@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/AuthProvider";
+import { AuthContext } from "../Components/Authentication/AuthProvider";
 import { TbStackBack } from "react-icons/tb";
 
 const SignIn = () => {
@@ -30,7 +30,7 @@ const SignIn = () => {
             <h1 className="text-5xl text-center pb-8 font-bold text-cream-primary">
               Stack-Underflow
             </h1>
-            {/* <TbStackBack className="text-8xl text-cream-primary" /> */}
+            <TbStackBack className="text-8xl text-cream-primary" />
           </div>
           <form onSubmit={handleLogin} className="pr-20 pl-10 py-20">
             <h1 className="text-3xl font-bold text-center pb-5 text-blue-primary">Sign In</h1>

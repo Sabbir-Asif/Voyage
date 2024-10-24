@@ -1,9 +1,9 @@
-import NavBar from "../Components/Navbars/Navbar";
+
 
 const LandingPage = () => {
     return (
         <div className="font-poppins">
-            <NavBar />
+            {/* <NavBar /> */}
             <div className="hero min-h-screen">
                 <div className="hero-content text-center">
                     <div className="max-w-xl">
