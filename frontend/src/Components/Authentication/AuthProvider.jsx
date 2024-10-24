@@ -7,7 +7,7 @@ import {
     signOut, 
     updateProfile 
 } from "firebase/auth";
-import app from "../../Firebase/firebase.config";
+import app from "../../Firebse/firebase.config";
 
 export const AuthContext = createContext();
 const auth = getAuth(app);
@@ -17,10 +17,17 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchUserData = async (email) => {
-    const res = await fetch(`http://localhost:8080/api/v1/users/search?email=${email}`);
+    const res = await fetch(`http://localhost:3500/users/find-user`,  {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email: email})
+      });
     const data = await res.json();
-    if (data.length > 0) {
-      return data[0];
+    console.log(data);
+    if (data.authSuccess) {
+      return data.data;
     }
     return null;
   };
@@ -34,11 +41,11 @@ const AuthProvider = ({ children }) => {
         displayName: userName,
       });
       
-      const displayName = userName;
-      const imageUrl = result.user?.photoUrl || 'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=';
-      const newUser = { displayName, email, imageUrl };
+      const username = userName;
+      const imageURL = result.user?.photoUrl || 'https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o=';
+      const newUser = { username, email, imageURL };
 
-      const response = await fetch('http://localhost:8080/api/v1/users', {
+      const response = await fetch('http://localhost:3500/users/create-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
