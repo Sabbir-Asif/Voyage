@@ -1,7 +1,7 @@
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { googleSignIn } from "../../firebase/GoogleAuth";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { emailPasswordSignUp } from "../../firebase/EmailPasswordAuth";
 
 const SignUp = () => {
@@ -10,7 +10,10 @@ const SignUp = () => {
   const passwordRef = useRef();
   const usernameRef = useRef();
 
-  const handleEmailPasswordLogIn = (e) => {
+  const [result, setResult] = useState(null);
+
+
+  const handleEmailPasswordLogIn = async (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
@@ -18,6 +21,7 @@ const SignUp = () => {
     emailPasswordSignUp(email, password)
       .then((data) => {
         console.log("Signed up user. From frontend: ", data);
+        setResult(data);
       })
       .catch((error) =>
         console.log(
@@ -27,7 +31,17 @@ const SignUp = () => {
       );
 
     try {
-      
+      const response = await axios.post(
+        "http://localhost:3500/users/create-user",
+        {
+          username: username,
+          email: email,
+        }
+      );
+
+      console.log("User created in mongo:", response.data); // Handle success response
+    } catch (error) {
+      console.error("Error creating user:", error); // Handle error
     }
   };
 

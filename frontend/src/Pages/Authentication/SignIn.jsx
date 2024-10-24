@@ -1,38 +1,41 @@
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
+import { useContext, useRef, useEffect } from "react";
 import { googleSignIn } from "../../firebase/GoogleAuth";
-import { useRef } from "react";
 import {
   emailPasswordSignIn,
   sendResetEmail,
 } from "../../firebase/EmailPasswordAuth";
+import { AuthContext } from "../../contexts/AuthProvider"; // Adjust path if necessary
 
 const SignIn = () => {
+  const { userInfo } = useContext(AuthContext); // Access userInfo from context
   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
-  // const navigateUser = () => {
-  //   const { user } = useContext(AuthContext);
-  //   console.log("User logged in: ", user);
-  // };
 
-  // if (user) {
-  //   console.log("user: ", user);
-  // } else console.log("NONE");
-
-  const navigateUser = (role) => {
-    if (role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/user");
+  useEffect(() => {
+    if (userInfo) {
+      // Navigate the user to a dashboard or home page after successful login
+      console.log("User is already logged in:", userInfo);
+      navigate("/dashboard"); // Change the route as per your app's logic
     }
-  };
+  }, [userInfo, navigate]);
 
-  const handleEmailPasswordSignIn = (e) => {
+  const handleEmailPasswordSignIn = async (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    emailPasswordSignIn(email, password);
+
+    try {
+      const user = await emailPasswordSignIn(email, password);
+      if (user) {
+        console.log("Login successful: ", user);
+        navigate("/dashboard"); // Change to your desired route
+      }
+    } catch (error) {
+      console.error("Error logging in with email and password", error.message);
+    }
   };
 
   const handleGoogleLogIn = async () => {
@@ -40,24 +43,24 @@ const SignIn = () => {
       const user = await googleSignIn();
       if (user) {
         console.log("Login successful: ", user);
-        navigateUser(user.role);
+        navigate("/dashboard");
       }
     } catch (error) {
-      console.log(error.message);
+      console.log("Google sign-in error:", error.message);
     }
   };
 
   const handleResetPassword = async () => {
     const email = emailRef.current.value;
     if (!email) {
-      console.log("Email not given.");
+      console.log("Email not provided");
       return;
     }
-
     try {
       await sendResetEmail(email);
+      console.log("Password reset email sent");
     } catch (error) {
-      console.log("Error occurred while sending password reset email.", error);
+      console.error("Error sending password reset email", error.message);
     }
   };
 
