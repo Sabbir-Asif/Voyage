@@ -5,8 +5,8 @@ import { User } from "./user.interface";
 const createUser = async (req: Request, res: Response) => {
   try {
     const user: User = req.body;
-    const { email, username, password } = user;
-    if (!email || !username || !password) {
+    const { email, username } = user;
+    if (!email || !username) {
       return res
         .status(400)
         .json({ message: "Username, email and password are required." });
@@ -33,9 +33,8 @@ const createUser = async (req: Request, res: Response) => {
 
 const getUsers = async (req: Request, res: Response) => {
   try {
-    const user: User = req.body;
-    const { email, password } = user;
-    const result = await UserServices.getUserByEmail({ email, password });
+    const { email } = req.body;
+    const result = await UserServices.getUserByEmail({ email });
     if (!result) {
       return res.status(200).json({
         authSuccess: false,
@@ -53,7 +52,35 @@ const getUsers = async (req: Request, res: Response) => {
   }
 };
 
+// Controller function to handle search user requests
+const searchUsers = async (req: Request, res: Response) => {
+  try {
+    // Extract search key from the query parameters
+    const searchKey: string = req.query.searchKey as string;
+
+    // Validate if search key is provided
+    if (!searchKey || searchKey.trim() === "") {
+      return res.status(400).json({ message: "Search key is required" });
+    }
+
+    // Call the service to search users
+    const users = await UserServices.searchUsersByName(searchKey);
+
+    // If no users are found
+    if (users.length === 0) {
+      return res.status(404).json({ message: "No users found" });
+    }
+
+    // Return the found users
+    res.status(200).json({ users });
+  } catch (error) {
+    console.error("Error while searching for users:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export const UserControllers = {
   createUser,
   getUsers,
+  searchUsers,
 };

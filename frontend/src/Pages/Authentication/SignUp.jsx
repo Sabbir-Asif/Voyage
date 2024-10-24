@@ -8,11 +8,13 @@ const SignUp = () => {
   //   const navigate = useNavigate();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const usernameRef = useRef();
 
   const handleEmailPasswordLogIn = (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    const username = usernameRef.current.value;
     emailPasswordSignUp(email, password)
       .then((data) => {
         console.log("Signed up user. From frontend: ", data);
@@ -23,6 +25,10 @@ const SignUp = () => {
           error
         )
       );
+
+    try {
+      
+    }
   };
 
   const handleGoogleLogIn = () => {
@@ -57,6 +63,18 @@ const SignUp = () => {
                   placeholder="email"
                   className="input input-bordered"
                   ref={emailRef}
+                  required
+                />
+              </div>
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Username</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="username"
+                  className="input input-bordered"
+                  ref={usernameRef}
                   required
                 />
               </div>
