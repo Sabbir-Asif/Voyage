@@ -5,6 +5,7 @@ import SignUp from "../Pages/SignUp";
 import Home from "../Components/Home/Home";
 import PlanATrip from "../Components/TripPlan/PlanATrip";
 import YourTrip from "../Components/YourTrip/YourTrip";
+import WeatherApp from "../Components/weather/WeatherApp";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             {
                 path: 'your-trip',
                 element: <YourTrip />
+            },
+            {
+                path: 'weather',
+                element: <WeatherApp />
             }
         ]
     }
