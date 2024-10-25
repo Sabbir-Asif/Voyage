@@ -22,7 +22,7 @@ const TripCard = ({ trip }) => {
                         alt="Shoes" />
                 </figure>
                 <div className="card-body">
-                    <h2 className="card-title text-2xl text-white">{`${requirement.destination?.cityName} ${requirement.tillWhen?.slice(0,5)}`}</h2>
+                    <h2 className="card-title text-2xl text-white">Memory 2024</h2>
                     <p></p>
                     <div className="card-actions justify-end">
                         <button className="btn bg-gradient-to-r from-orange-primary to-orange-secondary border-none text-base-100">View Gallary</button>

@@ -25,9 +25,9 @@ const ImageList = ({ tripId, user }) => {
 
         // Fetch images on component mount
         fetchImages();
-    }, [tripId, user._id]); // Depend on tripId and user._id
+    }, [tripId, user._id]);
 
-    console.log(images); // Optional: for debugging
+    console.log(images);
 
     return (
         <div className="max-w-5xl mx-auto mt-6 font-poppins">

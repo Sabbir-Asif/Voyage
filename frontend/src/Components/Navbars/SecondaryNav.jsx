@@ -41,7 +41,7 @@ const SecondaryNav = () => {
             </li>
             <li>
             <NavLink
-              to="/Blogs"
+              to="/home/blogs"
               className={({ isActive }) =>
                 isActive
                   ? "underline text-gray-600"
@@ -65,7 +65,7 @@ const SecondaryNav = () => {
           </li>
           <li>
             <NavLink
-              to="/Vlogs"
+              to="/home/vlog"
               className={({ isActive }) =>
                 isActive
                   ? "underline text-gray-600"

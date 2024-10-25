@@ -8,9 +8,11 @@ const fs = require('fs');
 const cors = require('cors');
 const Image = require('./models/Image');
 
+
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -29,6 +31,7 @@ const minioClient = new Minio.Client({
     secretKey: process.env.MINIO_ROOT_PASSWORD,
 });
 
+
 minioClient.bucketExists(process.env.MINIO_BUCKET, (err) => {
     if (err) {
         minioClient.makeBucket(process.env.MINIO_BUCKET, '', (err) => {
@@ -44,16 +47,18 @@ minioClient.bucketExists(process.env.MINIO_BUCKET, (err) => {
 app.post('/search', async (req, res) => {
     const { userId, tripId, prompt } = req.body;
     console.log(userId, tripId);
-
+   
     if (!userId || !tripId || !prompt) {
         return res.status(400).send('UserId, TripId, and prompt are required.');
     }
     try {
+        // Fetch images with matching userId and tripId
         const images = await Image.find({ userId, tripId }, 'llmResponse url');
-
+       
         if (images.length === 0) {
             return res.status(404).json({ message: 'No images found for the given userId and tripId.' });
         }
+
 
         const responses = images.map((image, index) => `${index}. ${image.llmResponse}`);
         const formattedResponses = responses.join('\n\n');
@@ -131,7 +136,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
 
 
             writer.on('finish', async () => {
-                const imgPath = `/Users/md.sabbirhosen/Desktop/projects/voyage/backend2/${fileName}`;
+                const imgPath = `D:/Web-Development/BCF/Voyage/backend2/${fileName}`;
                 const imageBuffer = fs.readFileSync(imgPath);
                 const imageBase64 = imageBuffer.toString('base64');
 
@@ -139,7 +144,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
                 try {
                     const output = await axios.post('http://localhost:11434/api/generate', {
                         "model": "llava",
-                        "prompt": "Tell me about the image (in 1-2 line)",
+                        "prompt":"Tell me about the image (in 1-2 line)",
                         "images": [imageBase64],
                         "stream": false
                     });
@@ -184,6 +189,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     });
 });
 
+
 app.post('/all', async (req, res) => {
     const { userId, tripId } = req.body;
 
@@ -216,6 +222,95 @@ app.post('/all', async (req, res) => {
     }
 });
 
+
+const YOUTUBE_API_KEY = 'AIzaSyBnEDS6HnY98qOA5I0OYw8U-eIWmjaYCRY';
+
+
+// Route to generate vlog and fetch related YouTube videos based on sentiment
+app.get('/generateVlog', async (req, res) => {
+
+
+
+
+    try {
+        // Fetch images with matching userId and tripId
+        const userId = "671a24b6d8f65bc188503167";
+        const tripId = "671abb12992702bb01ed18bd"
+        const images = await Image.find({ userId , tripId }, 'llmResponse url');
+
+
+        if (images.length === 0) {
+            return res.status(404).json({ message: 'No images found for the given userId and tripId.' });
+        }
+
+
+        const responses = images.map((image, index) => `${index}. ${image.llmResponse}`);
+        const formattedResponses = responses.join('\n\n');
+
+
+        // Send prompt to the LLM to find the best match
+        const ollamaResponse = await axios.post('http://localhost:11434/api/chat', {
+            model: "llama3.2",
+            messages: [
+                {
+                    role: "user",
+                    content: `By analysing the follwoing information you will give his mood for the specific trip.s:\n\n${formattedResponses}`
+                }
+            ],
+            stream: false
+        });
+
+
+        const mood = ollamaResponse.data.message.content.trim();
+
+
+        const vlogResponse = await axios.post('http://localhost:11434/api/chat', {
+            model: "llama3.2",
+            messages: [
+                {
+                    role: "user",
+                    content: `Create a vlog description based on the following information for a ${mood} mood. Include a description, memorable places, and any special moments.`
+                }
+            ],
+            stream: false
+        });
+
+
+        const vlog = vlogResponse.data.message.content;
+
+
+        const searchQuery = `songs for ${mood} mood`;
+        const youtubeResponse = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+            params: {
+                part: 'snippet',
+                q: searchQuery,
+                type: 'video',
+                maxResults: 5,
+                key: YOUTUBE_API_KEY
+            }
+        });
+
+
+        const videos = youtubeResponse.data.items.map(item => ({
+            title: item.snippet.title,
+            description: item.snippet.description,
+            videoId: item.id.videoId,
+            thumbnail: item.snippet.thumbnails.default.url
+        }));
+        const imageUrls = images.map(image => image.url);
+        // Send the vlog, best-fit image URL, and YouTube videos as response
+        res.status(200).json({
+            vlog,
+            imageUrls,
+            videos
+        });
+
+
+    } catch (error) {
+        console.error('Error generating vlog:', error);
+        res.status(500).json({ error: 'Error generating vlog and fetching related videos.' });
+    }
+});
 
 
 const PORT = process.env.PORT || 5000;

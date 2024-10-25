@@ -9,6 +9,8 @@ import WeatherApp from "../Components/weather/WeatherApp";
 import ErrorPage from "../Pages/ErrorPage";
 import GallaryPage from "../Components/Gallary/GallaryPage";
 import TripDetails from "../Components/Gallary/TripDetails";
+import BlogsPage from "../Components/Blogs/BlogsPage";
+import Vlog from "../Components/Vlogs/Vlog";
 
 const router = createBrowserRouter([
     {
@@ -48,6 +50,14 @@ const router = createBrowserRouter([
             {
                 path: 'trip-details/:tripId',
                 element: <TripDetails></TripDetails>
+            },
+            {
+                path: 'blogs',
+                element: <BlogsPage />
+            },
+            {
+                path: 'vlog',
+                element: <Vlog />
             }
         ]
     }
