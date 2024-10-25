@@ -26,7 +26,7 @@ const YourTrip = () => {
     const fetchTripDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3500/trip-details/details`,
+          `http://localhost:3500/trip-details/get`,
           {
             params: { userId },
           }
@@ -34,7 +34,7 @@ const YourTrip = () => {
 
         if (response.status === 200) {
           setTripDetails(response.data);
-          console.log(tripDetails)
+          console.log(tripDetails);
         } else {
           setError("Failed to fetch trip details.");
         }
@@ -154,33 +154,31 @@ const YourTrip = () => {
     console.log("Requirement ID:", requirementId);
     console.log("Details:", itinerary);
 
-    if (requirementId) {
-      try {
-        const response = await axios.post(
-          "http://localhost:3500/trip-details/details",
-          {
-            userId: user._id, // Send the userId and itinerary in the body
-            requirementsId: requirementId,
-            details: itinerary,
+    try {
+      const response = await axios.post(
+        "http://localhost:3500/trip-details/details",
+        {
+          userId: user._id, // Send the userId and itinerary in the body
+          requirementsId: requirementId,
+          details: itinerary,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (response.status === 200 || response.status === 201) {
-          console.log("Trip details successfully sent:", response.data);
-        } else {
-          console.error("Failed to send trip details:", response.statusText);
         }
-      } catch (error) {
-        console.error(
-          "Error while sending trip details:",
-          error.response || error
-        );
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        console.log("Trip details successfully sent:", response.data);
+      } else {
+        console.error("Failed to send trip details:", response.statusText);
       }
+    } catch (error) {
+      console.error(
+        "Error while sending trip details:",
+        error.response || error
+      );
     }
   };
 

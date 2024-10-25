@@ -28,7 +28,7 @@ export const addTripDetailAsTextService = async (
     requirementsId: requirementsId,
     checkedItineraries: [], // Empty array as it's an array of objects
     suggestedActivities: [], // Empty array as it's an array of objects
-    details: text,
+    details: string,
   });
 
   await newTripDetail.save();

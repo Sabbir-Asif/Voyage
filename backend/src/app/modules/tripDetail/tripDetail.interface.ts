@@ -18,5 +18,5 @@ export type TripDetail = {
   requirementsId: string;
   checkedItineraries: Itinerary[];
   suggestedActivities: Activity[];
-  detail: string;
+  details: string;
 };
